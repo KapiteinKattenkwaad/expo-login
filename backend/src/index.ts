@@ -15,27 +15,23 @@ app.use(express.json());
 
 // Register
 app.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+  if (!email || !password || !name) {
+    return res.status(400).json({ error: "Missing fields" });
   }
 
+  const hashed = await bcrypt.hash(password, 10);
   try {
-    const hashed = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { email, password: hashed },
+      data: { email, password: hashed, name },
     });
     res.json({ success: true });
-  } catch (e: any) {
-    // Prisma duplicate key error code is P2002
-    if (e.code === "P2002") {
-      res.status(400).json({ error: "Email already registered" });
-    } else {
-      res.status(500).json({ error: "Internal server error" });
-    }
+  } catch (e) {
+    res.status(400).json({ error: "User already exists" });
   }
 });
+
 
 
 // Login
