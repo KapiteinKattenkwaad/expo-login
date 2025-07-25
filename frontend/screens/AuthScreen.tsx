@@ -22,7 +22,7 @@ export default function AuthScreen({ onLogin }: { onLogin: () => void }) {
   async function handleLogin() {
     try {
       setError('');
-      const { token } = await login(email, password);
+      const { token } = await login(email, password, name);
       await saveToken(token);
       onLogin();
     } catch (e) {
@@ -38,20 +38,26 @@ export default function AuthScreen({ onLogin }: { onLogin: () => void }) {
         value={name}
         onChangeText={setName}
         autoCapitalize="none"
+        required
+        type="text"
       />
       <TextInput
         className="border p-2 rounded"
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        required
+        type="email"
         autoCapitalize="none"
       />
       <TextInput
         className="border p-2 rounded"
         placeholder="Password"
         value={password}
+        required
         onChangeText={setPassword}
         secureTextEntry
+        type="password"
       />
       {error ? <Text className="text-red-500">{error}</Text> : null}
       <Button title="Register" onPress={handleRegister} />

@@ -36,7 +36,7 @@ app.post("/register", async (req, res) => {
 
 // Login
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required" });
@@ -57,6 +57,7 @@ app.post("/login", async (req, res) => {
     user: {
       id: user.id,
       email: user.email,
+      name: user?.name
     },
   });
 });
@@ -65,7 +66,7 @@ app.post("/login", async (req, res) => {
 app.get("/profile", authMiddleware, async (req, res) => {
   const user = await prisma.user.findUnique({ where: { id: req.userId } });
   if (!user) return res.status(404).json({ error: "User not found" });
-  res.json({ id: user.id, email: user.email });
+  res.json({ id: user.id, email: user.email, name: user?.name });
 });
 
 

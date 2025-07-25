@@ -16,13 +16,15 @@ export default function ProfileScreen({ onLogout }: { onLogout: () => void }) {
       .catch((e) => setError(e.message));
   }, []);
 
+  console.log({user})
+
   return (
     <View className="p-4 space-y-4">
       {error ? (
         <Text className="text-red-500">{error}</Text>
       ) : user ? (
         <>
-          <Text>Welcome, {user.email}</Text>
+          <Text>Welcome, {user.name ?? user.email}</Text>
           <Button
             title="Logout"
             onPress={async () => {
