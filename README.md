@@ -20,7 +20,6 @@ A starter template for building fullstack mobile apps using:
 ```
 .
 ├── backend/                    # Node.js + Express server
-│   ├── routes/                 # Auth endpoints
 │   ├── prisma/                 # Prisma schema and client
 │   ├── utils/                  # Helper functions (e.g. auth)
 │   └── index.ts                # Express entry point
