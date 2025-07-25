@@ -1,6 +1,6 @@
 import { getToken } from './token';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3001';
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'http://localhost:3001';
 
 export async function register(email: string, password: string, name: string) {
   const res = await fetch(`${BASE_URL}/register`, {
