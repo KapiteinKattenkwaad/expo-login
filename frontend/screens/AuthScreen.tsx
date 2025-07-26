@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
-import { register, login } from '../utils/api';
-import { saveToken } from '../utils/token';
+import React, { useEffect, useState } from 'react';
+import { View, TextInput, Button as ButtonNative, Text } from 'react-native';
+import { register } from '../utils/api';
+import {
+  useNavigation,
+  NavigationProp,
+} from '@react-navigation/native';
+import { Button } from '@react-navigation/elements';
+import { RootStackParamList } from '../types/types';
+import { getProfile } from '../utils/api';
 
 export default function AuthScreen({ onLogin }: { onLogin: () => void }) {
   const [email, setEmail] = useState('');
@@ -9,22 +15,21 @@ export default function AuthScreen({ onLogin }: { onLogin: () => void }) {
   const [name, setName] = useState("");
   const [error, setError] = useState('');
 
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+    useEffect(() => {
+      getProfile()
+        .then((user) => {
+          user ? navigation.navigate('ProfileScreen') : navigation.navigate('LoginScreen')
+        })
+        .catch((e) => console.error(e.message));
+    }, []);
+
   async function handleRegister() {
     try {
       setError('');
       await register(email, password, name);
       alert('Registration successful!');
-    } catch (e) {
-      setError(e.message);
-    }
-  }
-
-  async function handleLogin() {
-    try {
-      setError('');
-      const { token } = await login(email, password, name);
-      await saveToken(token);
-      onLogin();
     } catch (e) {
       setError(e.message);
     }
@@ -38,30 +43,32 @@ export default function AuthScreen({ onLogin }: { onLogin: () => void }) {
         value={name}
         onChangeText={setName}
         autoCapitalize="none"
-        required
-        type="text"
+
       />
       <TextInput
         className="border p-2 rounded"
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
-        required
-        type="email"
         autoCapitalize="none"
       />
       <TextInput
         className="border p-2 rounded"
         placeholder="Password"
         value={password}
-        required
+        passwordRules='required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8;'
         onChangeText={setPassword}
         secureTextEntry
-        type="password"
       />
       {error ? <Text className="text-red-500">{error}</Text> : null}
-      <Button title="Register" onPress={handleRegister} />
-      <Button title="Login" onPress={handleLogin} />
+
+      <ButtonNative title="Register" onPress={handleRegister} />
+      <Text>
+        Have an account already?
+      </Text>
+      <Button onPress={() => navigation.navigate('LoginScreen')}>
+        Go to login
+      </Button>
     </View>
   );
 }

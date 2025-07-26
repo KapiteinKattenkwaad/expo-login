@@ -36,7 +36,7 @@ app.post("/register", async (req, res) => {
 
 // Login
 app.post("/login", async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required" });
@@ -56,8 +56,7 @@ app.post("/login", async (req, res) => {
     token,
     user: {
       id: user.id,
-      email: user.email,
-      name: user?.name
+      email: user.email
     },
   });
 });

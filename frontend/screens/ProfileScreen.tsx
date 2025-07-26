@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Button } from 'react-native';
 import { getProfile } from '../utils/api';
 import '../global.css'
-// import { deleteToken } from '../utils/token';
+import { removeToken } from '../utils/token';
 
 export default function ProfileScreen({ onLogout }: { onLogout: () => void }) {
   const [user, setUser] = useState<any>(null);
@@ -16,8 +16,6 @@ export default function ProfileScreen({ onLogout }: { onLogout: () => void }) {
       .catch((e) => setError(e.message));
   }, []);
 
-  console.log({user})
-
   return (
     <View className="p-4 space-y-4">
       {error ? (
@@ -28,7 +26,7 @@ export default function ProfileScreen({ onLogout }: { onLogout: () => void }) {
           <Button
             title="Logout"
             onPress={async () => {
-              // await deleteToken();
+              await removeToken();
               onLogout();
             }}
           />

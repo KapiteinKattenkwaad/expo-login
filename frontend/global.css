@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+button {
+    @apply w-fit;
+}
+
+::placeholder {
+    @apply text-gray-600;
+}
